@@ -2,10 +2,13 @@ from.conexion_db import ConexionDB
 from mensajes import mensaje
 
 columnas_trastornos = ['transtornos']
-columnas_tipotrastornos = ['version', 'tipo_trastornos']
+columnas_categoria = ['categoria']
+columnas_tipotrastornos = ['version', 'categoria', 'tipo_trastornos']
 
 nombre_tabla_trastornos = 'transtornos'
+nombre_tabla_categoria = 'categoria'
 nombre_tabla_tipotrastornos = 'tipo_trastornos'
+
 
 # Tabla principal
 def crear_tabla(columnas):
@@ -133,7 +136,129 @@ def obtener_contenido():
 
     return lista_cont
 
-# Tabla secundaria
+
+# Tabla Categoria de Trastornos
+def crear_tabla_categoria(columnas):
+
+    conexion = ConexionDB()
+
+    try:
+        for i in range(0, len(columnas)):
+            create_sql = f'''
+            CREATE TABLE {nombre_tabla_categoria}(
+            id_trastornos INTEGER,
+            {columnas[0]} VARCHAR(100),
+            PRIMARY KEY(id_trastornos AUTOINCREMENT)
+            ) '''
+        conexion.cursor.execute(create_sql)
+        conexion.cerrar()
+    except:
+        mensaje('Crear Registro',
+                'Ya existe registro en la Base de Datos de categoria',
+                1)
+    else:
+        mensaje('Crear Registro',
+                'Se ha creado registro en la Base de Datos',
+                0)
+
+    #insertar_col_categoria(columnas[0])
+
+def borrar_tabla_categoria():
+    conexion = ConexionDB()
+    sql = f'DROP TABLE {nombre_tabla_categoria}'
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+        mensaje('Eliminar Registro',
+                'Se ha eliminado el registro en la Base de Datos',
+                0)
+    except:
+        mensaje('Eliminar Registro',
+                'No existe ningun registro en la Base de Datos',
+                1)
+
+class Categoria:
+    def __init__(self,categoria):
+        self.id_categoria = None
+        self.categoria = categoria
+
+    def __str__(self):
+        return f'Categoria[{self.categoria}]'
+
+def guardar_categoria(categoria):
+
+    conexion = ConexionDB()
+
+    sql = f"""INSERT INTO categoria (categoria) 
+    VALUES(''{categoria}')"""
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+    except:
+        mensaje('Conexion al Registro',
+                'La tabla no está creada en la base de datos',
+                2)
+
+def insertar_col_categoria(new_col):
+
+    conexion = ConexionDB()
+
+    sql = f"""INSERT INTO categoria (categoria) 
+    VALUES('{new_col}')"""
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+    except:
+        mensaje('Conexion al Registro',
+                'La tabla no está creada en la base de datos',
+                2)
+
+def eliminar_categoria(categoria):
+
+    conexion = ConexionDB()
+
+    sql = f"""DELETE FROM categoria WHERE categoria = '{categoria}'"""
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+
+    except:
+        mensaje('Eliminar datos',
+                'No se ha podido eliminar de la tabla',
+                2)
+
+def obtener_categoria():
+
+    conexion = ConexionDB()
+
+    lista_categoria = []
+    cont = 0
+
+    sql = f'SELECT categoria FROM {nombre_tabla_categoria}'
+
+    try:
+        conexion.cursor.execute(sql)
+        lista_categoria = conexion.cursor.fetchall()
+        conexion.cerrar()
+    except:
+        pass
+    '''
+    try:
+        for x in lista_categoria:
+            lista_categoria.insert(cont, x)
+            cont = +1
+    except:
+        pass
+'''
+
+    return lista_categoria
+
+
+# Tabla Tipo de Trastornos
 def crear_tabla_sec(columnas):
 
     conexion = ConexionDB()
@@ -158,6 +283,7 @@ def crear_tabla_sec(columnas):
                 0)
 
     insertar_col_tt(columnas[1])
+    insertar_col_tt(columnas[2])
 
 def borrar_tabla_sec():
     conexion = ConexionDB()
@@ -182,12 +308,12 @@ class Tipo_Trastornos:
     def __str__(self):
         return f'Tipo_Trastornos[{self.tipo_trastorno}]'
 
-def guardar_tipotrastornos(version,tipo_trastornos):
+def guardar_tipotrastornos(version,categoria,tipo_trastornos):
 
     conexion = ConexionDB()
 
-    sql = f"""INSERT INTO tipo_trastornos (version,tipo_trastornos) 
-    VALUES('{version[0]}','{tipo_trastornos}')"""
+    sql = f"""INSERT INTO tipo_trastornos (version,categoria,tipo_trastornos) 
+    VALUES('{version[0]}','{categoria}','{tipo_trastornos}')"""
 
     try:
         conexion.cursor.execute(sql)

@@ -9,7 +9,9 @@ from model.transtornos_dao import crear_tabla, borrar_tabla, crear_tabla_sec, bo
                                 insertar_col, eliminar_col, obtener_parametros, columnas_trastornos, \
                                 guardar_tipotrastornos, eliminar_tipotrastornos, obtener_tipos_trastornos,\
                                 obtener_contenido,eliminar_fila, columnas_tipotrastornos, \
-                                obtener_version_tipos_trastornos, nombre_tabla_trastornos, nombre_tabla_tipotrastornos
+                                obtener_version_tipos_trastornos, nombre_tabla_trastornos, nombre_tabla_tipotrastornos, \
+                                guardar_categoria, crear_tabla_categoria, borrar_tabla_categoria, columnas_categoria, \
+                                insertar_col_categoria, obtener_categoria
 
 class Frame(tk.Frame):
 
@@ -44,17 +46,42 @@ class Frame(tk.Frame):
         self.entry_eliminar_parametro.place(x=250, y=55)
         self.entry_eliminar_parametro.config(state='disable')
 
+
+
+        self.mi_intro_categoria = tk.StringVar()
+        self.mi_intro_categoria_comb = tk.StringVar()
+        columnas_cat = []
+        for x in range(0, len(self.obtener_categoria())):
+            cat = self.obtener_categoria()[x]
+            columnas_cat.insert(x, cat)
+        self.columnas_cat = columnas_cat
+        self.entry_intro_categoria = tk.Entry(self, textvariable=self.mi_intro_categoria)
+        self.entry_intro_categoria.config(width=30, state='disable', font=('Arial', 12))
+        self.entry_intro_categoria.place(x=720, y=15)
+        self.entry_intro_categoria_comb = ttk.Combobox(self, state="readonly",
+                                                     width=43, height=50, values = self.columnas_cat,
+                                                     textvariable=self.mi_intro_categoria_comb)
+        self.entry_intro_categoria_comb.config(state='disable')
+        self.entry_intro_categoria_comb.place(x=1210, y=15)
+
+        #self.mi_eliminar_categoria = tk.StringVar()
+        #self.entry_eliminar_categoria = ttk.Combobox(self, state="readonly",
+         #                                             width=43, height=50, values=obtener_tipos_trastornos(),
+         #                                             textvariable=self.mi_eliminar_categoria)
+        #self.entry_eliminar_categoria.place(x=720, y=55)
+        #self.entry_eliminar_categoria.config(state='disable')
+
         self.mi_intro_transtorno = tk.StringVar()
         self.entry_intro_transtorno = tk.Entry(self, textvariable = self.mi_intro_transtorno)
         self.entry_intro_transtorno.config(width=30, state='disable', font=('Arial', 12))
-        self.entry_intro_transtorno.place(x=780, y=15)
+        self.entry_intro_transtorno.place(x=1210, y=55)
 
 
         self.mi_eliminar_transtorno = tk.StringVar()
         self.entry_eliminar_transtorno = ttk.Combobox(self, state="readonly",
                                                      width=43, height=50, values = obtener_tipos_trastornos(),
                                                      textvariable=self.mi_eliminar_transtorno)
-        self.entry_eliminar_transtorno.place(x=780, y=55)
+        self.entry_eliminar_transtorno.place(x=720, y=55)
         self.entry_eliminar_transtorno.config(state='disable')
 
         # Botones
@@ -67,13 +94,21 @@ class Frame(tk.Frame):
         self.boton_eliminar_parametro.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
         self.boton_eliminar_parametro.place(x=70, y=50)
 
+        self.boton_intro_categoria = tk.Button(self, text='Insertar categoría', command = self.habilitar_intro_categoria)
+        self.boton_intro_categoria.config(width=15, font=('Arial', 10, 'bold'), fg='blue', bg='white', activebackground='blue')
+        self.boton_intro_categoria.place(x=550, y=15)
+
+        #self.boton_eliminar_categoria = tk.Button(self, text='Eliminar categoría', command = self.habilitar_eliminar_transtorno)
+        #self.boton_eliminar_categoria.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
+        #self.boton_eliminar_categoria.place(x=550, y=50)
+
         self.boton_intro_transtorno = tk.Button(self, text='Insertar transtorno', command = self.habilitar_intro_transtorno)
         self.boton_intro_transtorno.config(width=15, font=('Arial', 10, 'bold'), fg='blue', bg='white', activebackground='blue')
-        self.boton_intro_transtorno.place(x=600, y=10)
+        self.boton_intro_transtorno.place(x=1020, y=10)
 
         self.boton_eliminar_transtornos = tk.Button(self, text='Eliminar transtorno', command = self.habilitar_eliminar_transtorno)
         self.boton_eliminar_transtornos.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
-        self.boton_eliminar_transtornos.place(x=600, y=50)
+        self.boton_eliminar_transtornos.place(x=550, y=50)
 
         self.boton_guardar = tk.Button(self, text='Guardar', command = self.guardar)
         self.boton_guardar.config(width=15, font=('Arial', 10, 'bold'), fg='green', bg='white', activebackground='green')
@@ -95,13 +130,17 @@ class Frame(tk.Frame):
         x = obtener_parametros()
         return x
 
+    def obtener_categoria(self):
+        x = obtener_categoria()
+        return x
+
     def tabla_info(self):
 
         parametros = obtener_parametros()
 
         #Se indica el id de las columnas_trastornos que se ingresaran
         self.tabla = ttk.Treeview(self, columns=parametros)
-        self.tabla.place(x=70,y=150,width=1015)
+        self.tabla.place(x=70,y=150,width=1400)
 
         #Se indica el nombre de las columnas_trastornos que se ingresaran respecto al id introducido
         self.tabla.heading('#0', text='ID')
@@ -144,6 +183,23 @@ class Frame(tk.Frame):
 
         self.actualizar()
 
+    def guardar_categoria(self):
+        if self.mi_intro_categoria.get() != "":
+            try:
+                insertar_col_categoria(self.mi_intro_categoria.get())
+            except sqlite3.OperationalError:
+                mensaje('Introducir parámetros',
+                        'Parámetro incorrecto o repetido',
+                        2)
+            else:
+                mensaje('Introducir categoria',
+                        'Categoria introducido',
+                        0)
+            finally:
+                self.deshabilitar_campos()
+
+        self.actualizar()
+
     def guardar_tipotrastornos(self):
 
         user, version, date = obtener_infoversion()
@@ -155,7 +211,7 @@ class Frame(tk.Frame):
                     if self.mi_intro_transtorno.get() == i:
                         flag = 1
                 if flag != 1:
-                    guardar_tipotrastornos(version,self.mi_intro_transtorno.get())
+                    guardar_tipotrastornos(version, self.mi_intro_categoria_comb.get(), self.mi_intro_transtorno.get())
                     mensaje('Introducir trastornos',
                             'Trastornos introducido',
                             0)
@@ -193,6 +249,9 @@ class Frame(tk.Frame):
         #Eliminar parámetros
         if self.mi_eliminar_parametro.get() != "":
             self.eliminar_parametro()
+        #Introducir categoria
+        if self.mi_intro_categoria.get() != "":
+            self.guardar_categoria()
         #Introducir transtorno
         if self.mi_intro_transtorno.get() != "":
             self.guardar_tipotrastornos()
@@ -227,36 +286,56 @@ class Frame(tk.Frame):
     def habilitar_intro_parametro(self):
         self.entry_intro_parametro.config(state='normal')
         self.entry_eliminar_parametro.config(state='disable')
+        self.entry_intro_categoria.config(state='disable')
+        self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
 
     def habilitar_eliminar_parametro(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='normal')
+        self.entry_intro_categoria.config(state='disable')
+        self.entry_intro_categoria_comb.config(state='disable')
+        self.entry_intro_transtorno.config(state='disable')
+        self.entry_eliminar_transtorno.config(state='disable')
+
+    def habilitar_intro_categoria(self):
+        self.entry_intro_parametro.config(state='disable')
+        self.entry_eliminar_parametro.config(state='disable')
+        self.entry_intro_categoria.config(state='normal')
+        self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
 
     def habilitar_intro_transtorno(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='disable')
+        self.entry_intro_categoria.config(state='disable')
+        self.entry_intro_categoria_comb.config(state='normal')
         self.entry_intro_transtorno.config(state='normal')
         self.entry_eliminar_transtorno.config(state='disable')
 
     def habilitar_eliminar_transtorno(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='disable')
+        self.entry_intro_categoria.config(state='disable')
+        self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='normal')
 
     def deshabilitar_campos(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='disable')
+        self.entry_intro_categoria.config(state='disable')
+        self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
 
         self.mi_intro_parametro.set('')
         self.mi_intro_transtorno.set('')
         self.mi_eliminar_transtorno.set('')
+        self.mi_intro_categoria.set('')
+        self.mi_intro_categoria_comb.set('')
         self.entry_eliminar_parametro.set(" ")
 
 def barra_menu(app):
@@ -274,6 +353,9 @@ def barra_menu(app):
 
     menu_inicio.add_command(label='Crear Base de datos', command= lambda: crear_tabla(columnas_trastornos))
     menu_inicio.add_command(label='Eliminar Base de datos',command= lambda: borrar_tabla())
+    menu_inicio.add_separator()
+    menu_inicio.add_command(label='Crear BD para categorias', command= lambda: crear_tabla_categoria(columnas_categoria))
+    menu_inicio.add_command(label='Eliminar BD para categorias',command= lambda: borrar_tabla_categoria())
     menu_inicio.add_separator()
     menu_inicio.add_command(label='Crear BD para tipos de trastornos', command= lambda: crear_tabla_sec(columnas_tipotrastornos))
     menu_inicio.add_command(label='Eliminar BD para tipos de trastornos',command= lambda: borrar_tabla_sec())

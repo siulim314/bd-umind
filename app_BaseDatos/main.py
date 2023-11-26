@@ -2,7 +2,7 @@ import tkinter as tk
 from client.gui_app import Frame, barra_menu
 
 app_title= 'Umind'
-app_size = [1200,500]
+app_size = [1700,500]
 
 
 def main():
