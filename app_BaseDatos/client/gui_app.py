@@ -12,6 +12,7 @@ from model.transtornos_dao import crear_tabla, borrar_tabla, crear_tabla_sec, bo
                                 obtener_version_tipos_trastornos, nombre_tabla_trastornos, nombre_tabla_tipotrastornos, \
                                 guardar_categoria, crear_tabla_categoria, borrar_tabla_categoria, columnas_categoria, \
                                 insertar_col_categoria, obtener_categoria
+import constantes.constantes as cte
 
 class Frame(tk.Frame):
 
@@ -27,13 +28,15 @@ class Frame(tk.Frame):
         self.parametros()
 
     def parametros(self):
-
         # Entry
+
+        # Columna 1 Fila 1
         self.mi_intro_parametro = tk.StringVar()
         self.entry_intro_parametro = tk.Entry(self, textvariable = self.mi_intro_parametro)
-        self.entry_intro_parametro.config(width=30, state='disable', font=('Arial', 12))
-        self.entry_intro_parametro.place(x=250, y=15, height=20)
+        self.entry_intro_parametro.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
+        self.entry_intro_parametro.place(x=cte.posicion_x_col1_fil1_entry, y=cte.posicion_y_col1_fil1_entry)
 
+        # Columna 1 Fila 2
         self.mi_eliminar_parametro = tk.StringVar()
         columnas_par = []
         for x in range(1, len(self.obtener_param())):
@@ -41,13 +44,12 @@ class Frame(tk.Frame):
             columnas_par.insert(x, param)
         self.columnas_par = columnas_par
         self.entry_eliminar_parametro = ttk.Combobox(self, state="readonly",
-                                                     width=43, height=50, values = self.columnas_par,
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = self.columnas_par,
                                                      textvariable=self.mi_eliminar_parametro)
-        self.entry_eliminar_parametro.place(x=250, y=55)
+        self.entry_eliminar_parametro.place(x=cte.posicion_x_col1_fil2_entry, y=cte.posicion_y_col1_fil2_entry)
         self.entry_eliminar_parametro.config(state='disable')
 
-
-
+        # Columna 2 Fila 1
         self.mi_intro_categoria = tk.StringVar()
         self.mi_intro_categoria_comb = tk.StringVar()
         columnas_cat = []
@@ -56,75 +58,75 @@ class Frame(tk.Frame):
             columnas_cat.insert(x, cat)
         self.columnas_cat = columnas_cat
         self.entry_intro_categoria = tk.Entry(self, textvariable=self.mi_intro_categoria)
-        self.entry_intro_categoria.config(width=30, state='disable', font=('Arial', 12))
-        self.entry_intro_categoria.place(x=720, y=15)
+        self.entry_intro_categoria.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
+        self.entry_intro_categoria.place(x=cte.posicion_x_col2_fil1_entry, y=cte.posicion_y_col2_fil1_entry)
+
+        # Columna 3 Fila 1
         self.entry_intro_categoria_comb = ttk.Combobox(self, state="readonly",
-                                                     width=43, height=50, values = self.columnas_cat,
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = self.columnas_cat,
                                                      textvariable=self.mi_intro_categoria_comb)
         self.entry_intro_categoria_comb.config(state='disable')
-        self.entry_intro_categoria_comb.place(x=1210, y=15)
+        self.entry_intro_categoria_comb.place(x=cte.posicion_x_col3_fil1_entry, y=cte.posicion_y_col3_fil1_entry)
 
-        #self.mi_eliminar_categoria = tk.StringVar()
-        #self.entry_eliminar_categoria = ttk.Combobox(self, state="readonly",
-         #                                             width=43, height=50, values=obtener_tipos_trastornos(),
-         #                                             textvariable=self.mi_eliminar_categoria)
-        #self.entry_eliminar_categoria.place(x=720, y=55)
-        #self.entry_eliminar_categoria.config(state='disable')
-
+        # Columna 3 Fila 2
         self.mi_intro_transtorno = tk.StringVar()
         self.entry_intro_transtorno = tk.Entry(self, textvariable = self.mi_intro_transtorno)
-        self.entry_intro_transtorno.config(width=30, state='disable', font=('Arial', 12))
-        self.entry_intro_transtorno.place(x=1210, y=55)
+        self.entry_intro_transtorno.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
+        self.entry_intro_transtorno.place(x=cte.posicion_x_col3_fil2_entry, y=cte.posicion_y_col3_fil2_entry)
 
-
+        # Columna 2 Fila 2
         self.mi_eliminar_transtorno = tk.StringVar()
         self.entry_eliminar_transtorno = ttk.Combobox(self, state="readonly",
-                                                     width=43, height=50, values = obtener_tipos_trastornos(),
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = obtener_tipos_trastornos(),
                                                      textvariable=self.mi_eliminar_transtorno)
-        self.entry_eliminar_transtorno.place(x=720, y=55)
+        self.entry_eliminar_transtorno.place(x=cte.posicion_x_col2_fil2_entry, y=cte.posicion_y_col2_fil2_entry)
         self.entry_eliminar_transtorno.config(state='disable')
 
         # Botones
-        self.boton_intro_parametro = tk.Button(self, text='Insertar parámetro', command = self.habilitar_intro_parametro)
-        self.boton_intro_parametro.config(width=15, font=('Arial', 10, 'bold'), fg='blue', bg='white', activebackground='blue')
-        self.boton_intro_parametro.grid(row = 0, column = 0)
-        self.boton_intro_parametro.place(x=70, y=10)
+        self.boton_intro_parametro = tk.Button(self, text=cte.boton_InsertarParametro, command = self.habilitar_intro_parametro)
+        self.boton_intro_parametro.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                          fg=cte.colorFront_insertar_boton, bg=cte.colorBack_insertar_boton, activebackground=cte.colorActive_insertar_boton)
+        self.boton_intro_parametro.place(x=cte.posicion_x_InsertarParametro_boton, y=cte.posicion_y_InsertarParametro_boton)
 
-        self.boton_eliminar_parametro = tk.Button(self, text='Eliminar parámetro', command = self.habilitar_eliminar_parametro)
-        self.boton_eliminar_parametro.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
-        self.boton_eliminar_parametro.place(x=70, y=50)
+        self.boton_eliminar_parametro = tk.Button(self, text=cte.boton_EliminarParametro, command = self.habilitar_eliminar_parametro)
+        self.boton_eliminar_parametro.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                             fg=cte.colorFront_eliminar_boton, bg=cte.colorBack_eliminar_boton, activebackground=cte.colorActive_eliminar_boton)
+        self.boton_eliminar_parametro.place(x=cte.posicion_x_EliminarParametro_boton, y=cte.posicion_y_EliminarParametro_boton)
 
-        self.boton_intro_categoria = tk.Button(self, text='Insertar categoría', command = self.habilitar_intro_categoria)
-        self.boton_intro_categoria.config(width=15, font=('Arial', 10, 'bold'), fg='blue', bg='white', activebackground='blue')
-        self.boton_intro_categoria.place(x=550, y=15)
+        self.boton_intro_categoria = tk.Button(self, text=cte.boton_InsertarCategoria, command = self.habilitar_intro_categoria)
+        self.boton_intro_categoria.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                          fg=cte.colorFront_insertar_boton, bg=cte.colorBack_insertar_boton, activebackground=cte.colorActive_insertar_boton)
+        self.boton_intro_categoria.place(x=cte.posicion_x_InsertarCategoria_boton, y=cte.posicion_y_InsertarCategoria_boton)
 
-        #self.boton_eliminar_categoria = tk.Button(self, text='Eliminar categoría', command = self.habilitar_eliminar_transtorno)
-        #self.boton_eliminar_categoria.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
-        #self.boton_eliminar_categoria.place(x=550, y=50)
+        self.boton_intro_transtorno = tk.Button(self, text=cte.boton_InsertarTrasnstorno, command = self.habilitar_intro_transtorno)
+        self.boton_intro_transtorno.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                           fg=cte.colorFront_insertar_boton, bg=cte.colorBack_insertar_boton, activebackground=cte.colorActive_insertar_boton)
+        self.boton_intro_transtorno.place(x=cte.posicion_x_InsertarTranstornos_boton, y=cte.posicion_y_InsertarTranstornos_boton)
 
-        self.boton_intro_transtorno = tk.Button(self, text='Insertar transtorno', command = self.habilitar_intro_transtorno)
-        self.boton_intro_transtorno.config(width=15, font=('Arial', 10, 'bold'), fg='blue', bg='white', activebackground='blue')
-        self.boton_intro_transtorno.place(x=1020, y=10)
+        self.boton_eliminar_transtornos = tk.Button(self, text=cte.boton_EliminarTrasnstorno, command = self.habilitar_eliminar_transtorno)
+        self.boton_eliminar_transtornos.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                               fg=cte.colorFront_eliminar_boton, bg=cte.colorBack_eliminar_boton, activebackground=cte.colorActive_eliminar_boton)
+        self.boton_eliminar_transtornos.place(x=cte.posicion_x_EliminarTranstornos_boton, y=cte.posicion_y_EliminarTranstornos_boton)
 
-        self.boton_eliminar_transtornos = tk.Button(self, text='Eliminar transtorno', command = self.habilitar_eliminar_transtorno)
-        self.boton_eliminar_transtornos.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
-        self.boton_eliminar_transtornos.place(x=550, y=50)
+        self.boton_guardar = tk.Button(self, text=cte.boton_Guardar, command = self.guardar)
+        self.boton_guardar.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                  fg=cte.colorFront_guardar_boton, bg=cte.colorBack_guardar_boton, activebackground=cte.colorActive_guardar_boton)
+        self.boton_guardar.place(x=cte.posicion_x_Guardar_boton, y=cte.posicion_y_Guardar_boton)
 
-        self.boton_guardar = tk.Button(self, text='Guardar', command = self.guardar)
-        self.boton_guardar.config(width=15, font=('Arial', 10, 'bold'), fg='green', bg='white', activebackground='green')
-        self.boton_guardar.place(x=70, y=100)
+        self.boton_cancelar = tk.Button(self, text=cte.boton_Cancelar, command = self.deshabilitar_campos)
+        self.boton_cancelar.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                   fg=cte.colorFront_cancelar_boton, bg=cte.colorBack_cancelar_boton, activebackground=cte.colorActive_cancelar_boton)
+        self.boton_cancelar.place(x=cte.posicion_x_Cancelar_boton, y=cte.posicion_y_Cancelar_boton)
 
-        self.boton_cancelar = tk.Button(self, text='Cancelar', command = self.deshabilitar_campos)
-        self.boton_cancelar.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white', activebackground='red')
-        self.boton_cancelar.place(x=250, y=100)
+        self.boton_actualizar = tk.Button(self, text=cte.boton_Actualizar, command = self.actualizar)
+        self.boton_actualizar.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                     fg=cte.colorFront_actualizar_boton, bg=cte.colorBack_actualizar_boton)
+        self.boton_actualizar.place(x=cte.posicion_x_Actualizar_boton, y=cte.posicion_y_Actualizar_boton)
 
-        self.boton_actualizar = tk.Button(self, text='Actualizar', command = self.actualizar)
-        self.boton_actualizar.config(width=15, font=('Arial', 10, 'bold'), fg='black', bg='white')
-        self.boton_actualizar.place(x=925, y=100)
-
-        self.boton_eliminar = tk.Button(self, text='Eliminar', command = self.eliminar_fila)
-        self.boton_eliminar.config(width=15, font=('Arial', 10, 'bold'), fg='red', bg='white')
-        self.boton_eliminar.place(x=70, y=400)
+        self.boton_eliminar = tk.Button(self, text=cte.boton_Eliminar, command = self.eliminar_fila)
+        self.boton_eliminar.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
+                                   fg=cte.colorFront_eliminar_boton, bg=cte.colorBack_eliminar_boton)
+        self.boton_eliminar.place(x=cte.posicion_x_Eliminar_boton, y=cte.posicion_y_Eliminar_boton)
 
     def obtener_param(self):
         x = obtener_parametros()
@@ -140,7 +142,7 @@ class Frame(tk.Frame):
 
         #Se indica el id de las columnas_trastornos que se ingresaran
         self.tabla = ttk.Treeview(self, columns=parametros)
-        self.tabla.place(x=70,y=150,width=1400)
+        self.tabla.place(x=cte.posicion_x_tabla,y=cte.posicion_y_tabla,width=cte.dimension_x_tabla)
 
         #Se indica el nombre de las columnas_trastornos que se ingresaran respecto al id introducido
         self.tabla.heading('#0', text='ID')
@@ -340,7 +342,7 @@ class Frame(tk.Frame):
 
 def barra_menu(app):
     barra_menu =  tk.Menu(app)
-    app.config(menu = barra_menu, width = 300, height = 300)
+    app.config(menu = barra_menu)
 
     # Definir secciones
     menu_inicio = tk.Menu(barra_menu, tearoff = 0)
