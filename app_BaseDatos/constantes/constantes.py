@@ -1,3 +1,6 @@
+##############################################################
+######################### CONSTANTES #########################
+##############################################################
 
 #--------------------------> ENTRY
 ##### Fuentes
@@ -106,6 +109,26 @@ colorActive_actualizar_boton = 'black'
 #--------------------------------------#
 
 
+#--------------------------> CHECKBOX
+#### Nombres
+checkbox_BDParametros = 'DB parámetros'
+checkbox_BDCategoria = 'DB categoria'
+checkbox_BDTranstornos = 'DB transtornos'
+#### Posicion
+posicion_x_BDParametros_checkbox = 1500
+posicion_y_BDParametros_checkbox = 150
+
+posicion_x_BDCategoria_checkbox = 1500
+posicion_y_BDCategoria_checkbox = 250
+
+posicion_x_BDTranstornos_checkbox = 1500
+posicion_y_BDTranstornos_checkbox = 350
+### Valor Default
+checkbox_valor_default = False
+#--------------------------------------#
+#--------------------------------------#
+
+
 #--------------------------> TABLA
 #### Posicion
 posicion_x_tabla = 70
@@ -115,3 +138,23 @@ posicion_y_tabla = 150
 dimension_x_tabla = 1400
 #--------------------------------------#
 #--------------------------------------#
+
+
+#--------------------------> RUTAS
+#### Archivos
+ruta_plantilla = "./plantilla/"
+ruta_name_archivo = "umind_bd.xlsx"
+#### Base de datos
+ruta_DB = "database/transtornos.db"
+#--------------------------------------#
+#--------------------------------------#
+
+
+#--------------------------> COLUMNAS DB
+columnas_trastornos_default =  ['categoria', 'transtornos']
+columnas_categoria_default = ['categoria']
+columnas_tipotrastornos_default = ['version', 'categoria', 'tipo_trastornos']
+
+nombre_tabla_trastornos = 'transtornos'
+nombre_tabla_categoria = 'categoria'
+nombre_tabla_tipotrastornos = 'tipo_trastornos'

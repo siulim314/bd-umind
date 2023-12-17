@@ -17,10 +17,8 @@ def main():
     Frame(app_size[0], app_size[1], app = app)
 
     barra_menu(app)
-    #Frame.deshabilitar_entradas
 
     app.mainloop()
-
 
 if __name__ == '__main__':
     main()

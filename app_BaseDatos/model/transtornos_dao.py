@@ -1,13 +1,14 @@
 from.conexion_db import ConexionDB
 from mensajes import mensaje
+import constantes.constantes as cte
 
-columnas_trastornos = ['transtornos']
-columnas_categoria = ['categoria']
-columnas_tipotrastornos = ['version', 'categoria', 'tipo_trastornos']
+columnas_trastornos = cte.columnas_trastornos_default
+columnas_categoria = cte.columnas_categoria_default
+columnas_tipotrastornos = cte.columnas_tipotrastornos_default
 
-nombre_tabla_trastornos = 'transtornos'
-nombre_tabla_categoria = 'categoria'
-nombre_tabla_tipotrastornos = 'tipo_trastornos'
+nombre_tabla_trastornos = cte.nombre_tabla_trastornos
+nombre_tabla_categoria = cte.nombre_tabla_categoria
+nombre_tabla_tipotrastornos = cte.nombre_tabla_tipotrastornos
 
 
 # Tabla principal
@@ -33,6 +34,8 @@ def crear_tabla(columnas):
                 'Ya existe registro en la Base de Datos',
                 1)
 
+    insertar_col(columnas[1])
+
 def borrar_tabla():
     conexion = ConexionDB()
     sql = f'DROP TABLE {nombre_tabla_trastornos}'
@@ -47,6 +50,20 @@ def borrar_tabla():
         mensaje('Eliminar Registro',
                 'No existe ningun registro en la Base de Datos',
                 1)
+
+def check_tabla_parametros():
+    conexion = ConexionDB()
+
+    sql = f'SELECT * from {nombre_tabla_trastornos}'
+
+    try:
+        conexion.cursor.execute(sql)
+    except:
+        checkbox = False
+    else:
+        checkbox = True
+
+    return checkbox
 
 class Transtorno:
     def __init__(self,transtorno ,columnas):
@@ -98,6 +115,7 @@ def obtener_parametros():
         conexion.cursor.execute(sql)
         lista_parametros = conexion.cursor.fetchall()
         conexion.cerrar()
+
     except:
         pass
 
@@ -178,6 +196,20 @@ def borrar_tabla_categoria():
                 'No existe ningun registro en la Base de Datos',
                 1)
 
+def check_tabla_categoria():
+    conexion = ConexionDB()
+
+    sql = f'SELECT * from {nombre_tabla_categoria}'
+
+    try:
+        conexion.cursor.execute(sql)
+    except:
+        checkbox = False
+    else:
+        checkbox = True
+
+    return checkbox
+
 class Categoria:
     def __init__(self,categoria):
         self.id_categoria = None
@@ -186,12 +218,12 @@ class Categoria:
     def __str__(self):
         return f'Categoria[{self.categoria}]'
 
-def guardar_categoria(categoria):
+def guardar_categoria(categoria,checkbox_value):
 
     conexion = ConexionDB()
 
     sql = f"""INSERT INTO categoria (categoria) 
-    VALUES(''{categoria}')"""
+    VALUES('{categoria}')"""
 
     try:
         conexion.cursor.execute(sql)
@@ -200,6 +232,8 @@ def guardar_categoria(categoria):
         mensaje('Conexion al Registro',
                 'La tabla no está creada en la base de datos',
                 2)
+    else:
+        checkbox_value = True
 
 def insertar_col_categoria(new_col):
 
@@ -216,7 +250,7 @@ def insertar_col_categoria(new_col):
                 'La tabla no está creada en la base de datos',
                 2)
 
-def eliminar_categoria(categoria):
+def eliminar_categoria(categoria,checkbox_value):
 
     conexion = ConexionDB()
 
@@ -225,18 +259,19 @@ def eliminar_categoria(categoria):
     try:
         conexion.cursor.execute(sql)
         conexion.cerrar()
-
     except:
         mensaje('Eliminar datos',
                 'No se ha podido eliminar de la tabla',
                 2)
+    else:
+        checkbox_value = False
 
 def obtener_categoria():
 
     conexion = ConexionDB()
 
-    lista_categoria = []
-    cont = 0
+    lista_categoria_ = []
+    cont=0
 
     sql = f'SELECT categoria FROM {nombre_tabla_categoria}'
 
@@ -246,16 +281,15 @@ def obtener_categoria():
         conexion.cerrar()
     except:
         pass
-    '''
+
     try:
         for x in lista_categoria:
-            lista_categoria.insert(cont, x)
+            lista_categoria_.insert(cont, x[0])
             cont = +1
     except:
         pass
-'''
 
-    return lista_categoria
+    return lista_categoria_
 
 
 # Tabla Tipo de Trastornos
@@ -299,6 +333,20 @@ def borrar_tabla_sec():
         mensaje('Eliminar Registro',
                 'No existe ningun registro en la Base de Datos',
                 1)
+
+def check_tabla_trastornos():
+    conexion = ConexionDB()
+
+    sql = f'SELECT * from {nombre_tabla_tipotrastornos}'
+
+    try:
+        conexion.cursor.execute(sql)
+    except:
+        checkbox = False
+    else:
+        checkbox = True
+
+    return checkbox
 
 class Tipo_Trastornos:
     def __init__(self,tipo_trastorno):
@@ -371,6 +419,31 @@ def obtener_tipos_trastornos():
         pass
 
     return lista_trast
+
+def obtener_Categoria_tipostrastornos():
+
+    conexion = ConexionDB()
+
+    lista_categoria_trast = []
+    cont = 0
+
+    sql = 'SELECT categoria, tipo_trastornos FROM tipo_trastornos'
+
+    try:
+        conexion.cursor.execute(sql)
+        lista_trastornos_tt = conexion.cursor.fetchall()
+        conexion.cerrar()
+    except:
+        pass
+
+    try:
+        for x in lista_trastornos_tt:
+            lista_categoria_trast.insert(cont, x[0] + " - " + x[1])
+            cont = +1
+    except:
+        pass
+
+    return lista_categoria_trast
 
 def obtener_version_tipos_trastornos():
     conexion = ConexionDB()

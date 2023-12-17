@@ -7,11 +7,12 @@ from mensajes import mensaje
 import exp_imp.exportar_importar as exim
 from model.transtornos_dao import crear_tabla, borrar_tabla, crear_tabla_sec, borrar_tabla_sec,\
                                 insertar_col, eliminar_col, obtener_parametros, columnas_trastornos, \
-                                guardar_tipotrastornos, eliminar_tipotrastornos, obtener_tipos_trastornos,\
-                                obtener_contenido,eliminar_fila, columnas_tipotrastornos, \
-                                obtener_version_tipos_trastornos, nombre_tabla_trastornos, nombre_tabla_tipotrastornos, \
-                                guardar_categoria, crear_tabla_categoria, borrar_tabla_categoria, columnas_categoria, \
-                                insertar_col_categoria, obtener_categoria
+                                guardar_tipotrastornos, eliminar_tipotrastornos, obtener_Categoria_tipostrastornos,\
+                                obtener_tipos_trastornos, obtener_contenido,eliminar_fila, columnas_tipotrastornos,\
+                                obtener_categoria, obtener_version_tipos_trastornos, nombre_tabla_trastornos,\
+                                nombre_tabla_tipotrastornos, guardar_categoria, crear_tabla_categoria, \
+                                borrar_tabla_categoria, columnas_categoria, insertar_col_categoria, obtener_categoria,\
+                                check_tabla_parametros, check_tabla_categoria, check_tabla_trastornos
 import constantes.constantes as cte
 
 class Frame(tk.Frame):
@@ -29,14 +30,13 @@ class Frame(tk.Frame):
 
     def parametros(self):
         # Entry
-
-        # Columna 1 Fila 1
+        #### Columna 1 Fila 1
         self.mi_intro_parametro = tk.StringVar()
         self.entry_intro_parametro = tk.Entry(self, textvariable = self.mi_intro_parametro)
         self.entry_intro_parametro.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
         self.entry_intro_parametro.place(x=cte.posicion_x_col1_fil1_entry, y=cte.posicion_y_col1_fil1_entry)
 
-        # Columna 1 Fila 2
+        #### Columna 1 Fila 2
         self.mi_eliminar_parametro = tk.StringVar()
         columnas_par = []
         for x in range(1, len(self.obtener_param())):
@@ -44,41 +44,46 @@ class Frame(tk.Frame):
             columnas_par.insert(x, param)
         self.columnas_par = columnas_par
         self.entry_eliminar_parametro = ttk.Combobox(self, state="readonly",
-                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = self.columnas_par,
-                                                     textvariable=self.mi_eliminar_parametro)
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb,
+                                                     values = self.columnas_par, textvariable=self.mi_eliminar_parametro)
         self.entry_eliminar_parametro.place(x=cte.posicion_x_col1_fil2_entry, y=cte.posicion_y_col1_fil2_entry)
         self.entry_eliminar_parametro.config(state='disable')
 
-        # Columna 2 Fila 1
+        #### Columna 2 Fila 1
         self.mi_intro_categoria = tk.StringVar()
+
+        self.entry_intro_categoria = tk.Entry(self, textvariable=self.mi_intro_categoria)
+        self.entry_intro_categoria.config(width=cte.dimension_x_entry, state='disable',
+                                          font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
+        self.entry_intro_categoria.place(x=cte.posicion_x_col2_fil1_entry, y=cte.posicion_y_col2_fil1_entry)
+
+        #### Columna 3 Fila 1
         self.mi_intro_categoria_comb = tk.StringVar()
         columnas_cat = []
+
         for x in range(0, len(self.obtener_categoria())):
             cat = self.obtener_categoria()[x]
             columnas_cat.insert(x, cat)
         self.columnas_cat = columnas_cat
-        self.entry_intro_categoria = tk.Entry(self, textvariable=self.mi_intro_categoria)
-        self.entry_intro_categoria.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
-        self.entry_intro_categoria.place(x=cte.posicion_x_col2_fil1_entry, y=cte.posicion_y_col2_fil1_entry)
 
-        # Columna 3 Fila 1
         self.entry_intro_categoria_comb = ttk.Combobox(self, state="readonly",
-                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = self.columnas_cat,
-                                                     textvariable=self.mi_intro_categoria_comb)
-        self.entry_intro_categoria_comb.config(state='disable')
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb,
+                                                     values = self.columnas_cat, textvariable=self.mi_intro_categoria_comb)
         self.entry_intro_categoria_comb.place(x=cte.posicion_x_col3_fil1_entry, y=cte.posicion_y_col3_fil1_entry)
+        self.entry_intro_categoria_comb.config(state='disable')
 
-        # Columna 3 Fila 2
+        #### Columna 3 Fila 2
         self.mi_intro_transtorno = tk.StringVar()
         self.entry_intro_transtorno = tk.Entry(self, textvariable = self.mi_intro_transtorno)
-        self.entry_intro_transtorno.config(width=cte.dimension_x_entry, state='disable', font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
+        self.entry_intro_transtorno.config(width=cte.dimension_x_entry, state='disable',
+                                           font=(cte.fuente_tipo_entry, cte.fuente_tamaño_entry))
         self.entry_intro_transtorno.place(x=cte.posicion_x_col3_fil2_entry, y=cte.posicion_y_col3_fil2_entry)
 
-        # Columna 2 Fila 2
+        #### Columna 2 Fila 2
         self.mi_eliminar_transtorno = tk.StringVar()
         self.entry_eliminar_transtorno = ttk.Combobox(self, state="readonly",
-                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb, values = obtener_tipos_trastornos(),
-                                                     textvariable=self.mi_eliminar_transtorno)
+                                                     width=cte.dimension_x_comb, height=cte.dimension_y_comb,
+                                                     values = obtener_tipos_trastornos(), textvariable=self.mi_eliminar_transtorno)
         self.entry_eliminar_transtorno.place(x=cte.posicion_x_col2_fil2_entry, y=cte.posicion_y_col2_fil2_entry)
         self.entry_eliminar_transtorno.config(state='disable')
 
@@ -127,6 +132,45 @@ class Frame(tk.Frame):
         self.boton_eliminar.config(width=cte.dimension_x_boton, font=(cte.fuente_tipo_boton, cte.fuente_tamaño_boton, cte.fuente_diseño_boton),
                                    fg=cte.colorFront_eliminar_boton, bg=cte.colorBack_eliminar_boton)
         self.boton_eliminar.place(x=cte.posicion_x_Eliminar_boton, y=cte.posicion_y_Eliminar_boton)
+
+        # CheckBox
+        check_parametros = check_tabla_parametros()
+        check_categoria = check_tabla_categoria()
+        check_trastornos = check_tabla_trastornos()
+
+        self.var_checkbox_BDParametos = tk.StringVar()
+        self.checkbox_BDParametros = ttk.Checkbutton(self, text=cte.checkbox_BDParametros,
+                                                     variable=self.var_checkbox_BDParametos, onvalue=1, offvalue=0)
+        self.checkbox_BDParametros.place(x=cte.posicion_x_BDParametros_checkbox, y=cte.posicion_y_BDParametros_checkbox)
+        self.var_checkbox_BDParametos.set(cte.checkbox_valor_default)
+
+        self.var_checkbox_BDCategoria = tk.StringVar()
+        self.checkbox_BDCategoria = ttk.Checkbutton(self, text=cte.checkbox_BDCategoria,
+                                                    variable=self.var_checkbox_BDCategoria, onvalue=1, offvalue=0)
+        self.checkbox_BDCategoria.place(x=cte.posicion_x_BDCategoria_checkbox, y=cte.posicion_y_BDCategoria_checkbox)
+        self.var_checkbox_BDCategoria.set(cte.checkbox_valor_default)
+
+        self.var_checkbox_BDTransotrnos = tk.StringVar()
+        self.checkbox_BDTransotrnos = ttk.Checkbutton(self, text=cte.checkbox_BDTranstornos,
+                                                      variable=self.var_checkbox_BDTransotrnos, onvalue=1, offvalue=0)
+        self.checkbox_BDTransotrnos.place(x=cte.posicion_x_BDTranstornos_checkbox, y=cte.posicion_y_BDTranstornos_checkbox)
+        self.var_checkbox_BDTransotrnos.set(cte.checkbox_valor_default)
+
+
+        if check_parametros:
+            self.var_checkbox_BDParametos.set(True)
+        else:
+            self.var_checkbox_BDParametos.set(False)
+
+        if check_categoria:
+            self.var_checkbox_BDCategoria.set(True)
+        else:
+            self.var_checkbox_BDCategoria.set(False)
+
+        if check_trastornos:
+            self.var_checkbox_BDTransotrnos.set(True)
+        else:
+            self.var_checkbox_BDTransotrnos.set(False)
 
     def obtener_param(self):
         x = obtener_parametros()
@@ -269,12 +313,10 @@ class Frame(tk.Frame):
         self.tabla_info()
 
     def exportar_plantilla(self):
-
-        exim.exportar(False,obtener_parametros(),obtener_contenido(),obtener_tipos_trastornos())
+        exim.exportar(False,obtener_parametros(),obtener_contenido(),obtener_Categoria_tipostrastornos(),obtener_categoria())
 
     def exportar(self):
-
-        exim.exportar(True,obtener_parametros(),obtener_contenido(),obtener_tipos_trastornos())
+        exim.exportar(True,obtener_parametros(),obtener_contenido(),obtener_Categoria_tipostrastornos(),obtener_categoria())
 
     def importar(self):
 
@@ -293,6 +335,12 @@ class Frame(tk.Frame):
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
 
+        self.mi_intro_transtorno.set('')
+        self.mi_eliminar_transtorno.set('')
+        self.mi_intro_categoria.set('')
+        self.mi_intro_categoria_comb.set('')
+        self.entry_eliminar_parametro.set('')
+
     def habilitar_eliminar_parametro(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='normal')
@@ -300,6 +348,12 @@ class Frame(tk.Frame):
         self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
+
+        self.mi_intro_parametro.set('')
+        self.mi_intro_transtorno.set('')
+        self.mi_eliminar_transtorno.set('')
+        self.mi_intro_categoria.set('')
+        self.mi_intro_categoria_comb.set('')
 
     def habilitar_intro_categoria(self):
         self.entry_intro_parametro.config(state='disable')
@@ -309,6 +363,12 @@ class Frame(tk.Frame):
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='disable')
 
+        self.mi_intro_parametro.set('')
+        self.mi_intro_transtorno.set('')
+        self.mi_eliminar_transtorno.set('')
+        self.mi_intro_categoria_comb.set('')
+        self.entry_eliminar_parametro.set('')
+
     def habilitar_intro_transtorno(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='disable')
@@ -317,6 +377,12 @@ class Frame(tk.Frame):
         self.entry_intro_transtorno.config(state='normal')
         self.entry_eliminar_transtorno.config(state='disable')
 
+        self.mi_intro_parametro.set('')
+        self.mi_eliminar_transtorno.set('')
+        self.mi_intro_categoria.set('')
+        self.mi_intro_categoria_comb.set('')
+        self.entry_eliminar_parametro.set('')
+
     def habilitar_eliminar_transtorno(self):
         self.entry_intro_parametro.config(state='disable')
         self.entry_eliminar_parametro.config(state='disable')
@@ -324,6 +390,12 @@ class Frame(tk.Frame):
         self.entry_intro_categoria_comb.config(state='disable')
         self.entry_intro_transtorno.config(state='disable')
         self.entry_eliminar_transtorno.config(state='normal')
+
+        self.mi_intro_parametro.set('')
+        self.mi_intro_transtorno.set('')
+        self.mi_intro_categoria.set('')
+        self.mi_intro_categoria_comb.set('')
+        self.entry_eliminar_parametro.set('')
 
     def deshabilitar_campos(self):
         self.entry_intro_parametro.config(state='disable')
@@ -338,7 +410,7 @@ class Frame(tk.Frame):
         self.mi_eliminar_transtorno.set('')
         self.mi_intro_categoria.set('')
         self.mi_intro_categoria_comb.set('')
-        self.entry_eliminar_parametro.set(" ")
+        self.entry_eliminar_parametro.set('')
 
 def barra_menu(app):
     barra_menu =  tk.Menu(app)
@@ -348,7 +420,6 @@ def barra_menu(app):
     menu_inicio = tk.Menu(barra_menu, tearoff = 0)
     menu_configuracion =  tk.Menu(barra_menu, tearoff = 0)
     menu_ayuda =  tk.Menu(barra_menu, tearoff = 0)
-
 
     # -- Seccion: Inicio
     barra_menu.add_cascade(label='Inicio', menu = menu_inicio)

@@ -5,16 +5,17 @@ from mensajes import mensaje
 from tkinter import filedialog
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
+import constantes.constantes as cte
 
-ruta_plantilla = "./plantilla/"
-name_archivo = 'umind_bd.xlsx'
+ruta_plantilla = cte.ruta_plantilla
+name_archivo = cte.ruta_name_archivo
 
 # Crear un nuevo archivo de Excel
 worbook = openpyxl.Workbook()
 sheet = worbook.active
 
 
-def exportar(flag,obtener_parametros,obtener_contenido,obtener_tipos_trastornos):
+def exportar(flag,obtener_parametros,obtener_contenido,obtener_tipos_trastornos,obtener_categoria):
     # flag = 1 -> exportar con contenido
     # flag = 0 -> exportar sin contenido (plantilla)
 
@@ -22,15 +23,20 @@ def exportar(flag,obtener_parametros,obtener_contenido,obtener_tipos_trastornos)
     column_names = obtener_parametros
     contenido = obtener_contenido
     column_tipotras = obtener_tipos_trastornos
+    print(f"Obtener columnas {column_tipotras}")
 
     contenido = sorted(contenido)
 
     # Rellenamos el excel columna a columna
     try:
-        for c in range(len(column_names)):
-            c_1 = c + 1
+        for c in range(1,len(column_names)):
+            if c==1:
+                column_names[1] = "categoria-trastornos"
+            else:
+                pass
+
             # Escribir los parámetros
-            cab = sheet.cell(row=1, column=c_1)
+            cab = sheet.cell(row=1, column=c)
             cab.value = column_names[c]
 
         for r in range(len(contenido)):
@@ -48,19 +54,20 @@ def exportar(flag,obtener_parametros,obtener_contenido,obtener_tipos_trastornos)
                     cont.value = ""
 
         # Crear una regla de validación de datos para la celda B2
-        validation = DataValidation(
+        validation_tipotrans = DataValidation(
             type="list",
             formula1=f'"{",".join(column_tipotras)}"',
-            showDropDown=False
+            allow_blank=True
         )
-        sheet.add_data_validation(validation)
-        validation.add('A2:A1000000')
+
+        validation_tipotrans.add('A2:A1000000')
+        sheet.add_data_validation(validation_tipotrans)
+
 
         if flag == True:
             worbook.save(name_archivo)
         elif flag == False:
             worbook.save(ruta_plantilla + name_archivo)
-
     except:
         mensaje('Exportar archivo',
                 'No ha sido posible exportar',
@@ -86,6 +93,7 @@ def importar(nombre_tabla_trastornos):
 
         # Guardar el DataFrame en la base de datos SQLite
         df.to_sql(nombre_tabla_trastornos, conexion, if_exists='append', index=False)
+
     except:
         mensaje('Importar archivo',
                 'No ha sido posible importar',
